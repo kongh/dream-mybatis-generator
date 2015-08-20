@@ -1,0 +1,61 @@
+<sql id="whereReference">
+	<where>
+		<foreach collection="filters" index="filter" item="value">
+			<choose>
+				<when test="filter.operator == 'in' || filter.operator == 'not in'">
+					${filter.calculation} ${filter.column} ${filter.operator}
+					<foreach collection="value" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</when>
+				<when test="filter.operator == 'between'">
+					${filter.calculation} ${filter.column} ${filter.operator} #{value.left} and #{value.right}
+				</when>
+				<when test="filter.calculation == 'or'">
+					<include refid="orFilter"/>
+				</when>
+				<otherwise>
+					${filter.calculation} ${filter.column} ${filter.operator} #{value}
+				</otherwise>
+			</choose>
+		</foreach>
+	</where>
+</sql>
+
+<sql id="orFilter">
+	${filter.calculation}
+	<foreach collection="value" index="subFilter" item="subValue" open="(" separator="and" close=")">
+		<choose>
+			<when test="subFilter.operator == 'in' || subFilter.operator == 'not in'">
+				${subFilter.column} ${subFilter.operator}
+				<foreach collection="subValue" index="subIndex" item="subItem" open="(" separator="," close=")">
+					#{subItem}
+				</foreach>
+			</when>
+			<otherwise>
+				${subFilter.column} ${subFilter.operator} #{subValue}
+			</otherwise>
+		</choose>
+	</foreach>
+</sql>
+
+<sql id="orderReference">
+	<if test="orders != null and orders.size > 0">
+		order by
+		<foreach collection="orders" index="order" item="value" separator="," >
+			${order.column} ${order.direction}
+		</foreach>
+	</if>
+</sql>
+
+<sql id="pageReference">
+	<if test="pageParam != null">
+		limit #{pageParam.start},#{pageParam.limit}
+	</if>
+</sql>
+
+<sql id="rowLockReference">
+	<if test="rowLock != null and rowLock == true">
+		for update
+	</if>
+</sql>
