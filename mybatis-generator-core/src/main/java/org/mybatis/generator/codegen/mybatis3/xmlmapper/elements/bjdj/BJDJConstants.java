@@ -1,13 +1,27 @@
 package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.bjdj;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Created by Administrator on 2015/6/16.
  */
 public class BJDJConstants {
+    static {
+        InputStream inputStream = BJDJConstants.class.getResourceAsStream("/bjdj/constants.properties");
+        Properties prop = new Properties();
+        try {
+            prop.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PARAMETER_TYPE =  (String)prop.get("paramerter_type");
+    }
     /**
      * parameterType
      */
-    public static String PARAMETER_TYPE = "com.coder.dream.base.dao.query.Query";
+    public static String PARAMETER_TYPE;
 
     /**
      * REFID
