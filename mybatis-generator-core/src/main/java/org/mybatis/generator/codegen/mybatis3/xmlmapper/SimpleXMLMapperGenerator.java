@@ -67,6 +67,9 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
         addFindOneElement(answer);
         addBlankRowElement(answer);
 
+        addFindIdsElement(answer);
+        addBlankRowElement(answer);
+
         addCountElement(answer);
         addBlankRowElement(answer);
 
@@ -115,6 +118,11 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addFindOneElement(XmlElement parentElement) {
         AbstractXmlElementGenerator elementGenerator = new ComplexFindOneElementGenerator();
+        initializeAndExecuteGenerator(elementGenerator, parentElement);
+    }
+
+    protected void addFindIdsElement(XmlElement parentElement) {
+        AbstractXmlElementGenerator elementGenerator = new ComplexFindIdsElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
